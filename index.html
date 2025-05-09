@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Анестезіологічна форма</title>
 </head>
 <body>
@@ -13,15 +13,20 @@
   <div id="patientBlock" style="display:none;">
     <label>Прізвище:
       <select id="nameSelect"></select>
-    </label>
+    </label><br>
 
-    <!-- Тут ідуть інші поля -->
     <label>Початок анестезії (дата): <input type="date" id="startDate" /></label><br>
-    <label>Початок (год/хв): <input type="number" id="startHour" min="0" max="23" />:<input type="number" id="startMinute" min="0" max="59" /></label><br>
+    <label>Початок (год/хв): 
+      <input type="number" id="startHour" min="0" max="23" /> :
+      <input type="number" id="startMinute" min="0" max="59" />
+    </label><br>
+
     <label>Виведення з анестезії (дата): <input type="date" id="endDate" /></label><br>
-    <label>Виведення (год/хв): <input type="number" id="endHour" min="0" max="23" />:<input type="number" id="endMinute" min="0" max="59" /></label><br>
-    
-    <!-- Інші поля з довідників -->
+    <label>Виведення (год/хв): 
+      <input type="number" id="endHour" min="0" max="23" /> :
+      <input type="number" id="endMinute" min="0" max="59" />
+    </label><br>
+
     <label>Місце введення анестезії: <input id="place" /></label><br>
     <label>Тип операції: <input id="operationType" /></label><br>
     <label>Лікар анестезіолог: <input id="doctor" /></label><br>
