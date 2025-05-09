@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Анестезіологічна форма</title>
+</head>
+<body>
+  <h1>Анестезіологічна форма</h1>
+
+  <label>Номер історії: <input id="histNumber" /></label>
+  <button onclick="loadNames()">Знайти</button>
+
+  <div id="patientBlock" style="display:none;">
+    <label>Прізвище:
+      <select id="nameSelect"></select>
+    </label>
+
+    <!-- Тут ідуть інші поля -->
+    <label>Початок анестезії (дата): <input type="date" id="startDate" /></label><br>
+    <label>Початок (год/хв): <input type="number" id="startHour" min="0" max="23" />:<input type="number" id="startMinute" min="0" max="59" /></label><br>
+    <label>Виведення з анестезії (дата): <input type="date" id="endDate" /></label><br>
+    <label>Виведення (год/хв): <input type="number" id="endHour" min="0" max="23" />:<input type="number" id="endMinute" min="0" max="59" /></label><br>
+    
+    <!-- Інші поля з довідників -->
+    <label>Місце введення анестезії: <input id="place" /></label><br>
+    <label>Тип операції: <input id="operationType" /></label><br>
+    <label>Лікар анестезіолог: <input id="doctor" /></label><br>
+    <label>Сестра медична: <input id="nurse" /></label><br>
+    <label>Вид знечулення: <input id="anesthesiaType" /></label><br>
+    <label>Місце переведення: <input id="transferPlace" /></label><br>
+
+    <button onclick="submitForm()">Зберегти</button>
+  </div>
+
+  <script>
+    const apiUrl = "https://script.google.com/macros/s/AKfycbzA9Hbs0kh9vG8-RDlc62eZbU30COOhpnUMeMzdJyDn7Zs0-TXM-X8zi76sN5WJfbDCRQ/exec";
+
+    function loadNames() {
+      const hist = document.getElementById("histNumber").value;
+      fetch(`${apiUrl}?number=${hist}`)
+        .then(res => res.json())
+        .then(data => {
+          const sel = document.getElementById("nameSelect");
+          sel.innerHTML = "";
+          data.forEach(name => {
+            const opt = document.createElement("option");
+            opt.value = name;
+            opt.textContent = name;
+            sel.appendChild(opt);
+          });
+          if (data.length > 0) {
+            document.getElementById("patientBlock").style.display = "block";
+          }
+        });
+    }
+
+    function submitForm() {
+      const d = val => document.getElementById(val).value;
+
+      const start = new Date(`${d("startDate")}T${d("startHour")}:${d("startMinute")}`);
+      const end = new Date(`${d("endDate")}T${d("endHour")}:${d("endMinute")}`);
+      const durationMin = Math.round((end - start) / 60000);
+      const dur = `${Math.floor(durationMin/60)}:${("0"+(durationMin%60)).slice(-2)}`;
+
+      const data = {
+        histNumber: d("histNumber"),
+        name: d("nameSelect"),
+        startDate: d("startDate"),
+        startHour: d("startHour"),
+        startMinute: d("startMinute"),
+        endDate: d("endDate"),
+        endHour: d("endHour"),
+        endMinute: d("endMinute"),
+        duration: dur,
+        place: d("place"),
+        operationType: d("operationType"),
+        doctor: d("doctor"),
+        nurse: d("nurse"),
+        anesthesiaType: d("anesthesiaType"),
+        transferPlace: d("transferPlace")
+      };
+
+      fetch(apiUrl, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" }
+      })
+      .then(r => r.json())
+      .then(r => alert("Успішно збережено!"))
+      .catch(err => alert("Помилка: " + err));
+    }
+  </script>
+</body>
+</html>
